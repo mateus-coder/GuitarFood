@@ -42,14 +42,42 @@ const Scenes = {
     },
     PAUSE : (props) => {
         let { win, game } = props;
+        let backgroundPause = new Sprites({
+            sourceX : 100,
+            sourceY : 100,
+            width : 50,
+            height : 50,
+            x : 0,
+            y : 0
+        });
+        game.sprites.push(backgroundPause);
+        game.scenePaused.push(backgroundPause);
     },
     OVER : (props) => {
         let { win, game } = props;
         if(win){
-            //winScene
+            let backgroundOfChampion = new Sprites({
+                sourceX : 100,
+                sourceY : 100,
+                width : 50,
+                height : 50,
+                x : 0,
+                y : 0
+            });
+            game.sprites.push(backgroundOfChampion);
+            game.sceneGlorious.push(backgroundOfChampion);
         }
         else{
-            //loseScene
+            let backgroundOfLoser = new Sprites({
+                sourceX : 100,
+                sourceY : 100,
+                width : 50,
+                height : 50,
+                x : 0,
+                y : 0
+            });
+            game.sprites.push(backgroundOfLoser);
+            game.sceneCry.push(backgroundOfLoser);
         }
     }
 }

@@ -8,11 +8,11 @@ function verifyGameState (game) {
                 game[`${vetor[v]}`] = 0;
         }
     }
-    const setInvisibleObjects = (props) => {
-        let { arrays, game } = props;
+    const setVisibilityOfObject = (props) => {
+        let { arrays, game, status } = props;
         for(let i in arrays){
             for(let j in game[arrays[i]].length)
-                game[arrays[i]][j].status = "INVISIBLE";
+                game[arrays[i]][j].status = status;
         }
     }
     const removeInvisibleObjects = (props) => {
@@ -40,45 +40,78 @@ function verifyGameState (game) {
     switch(game.gameState){
         case game.PLAYING :
             resetCounts("contPlay");
-            game.contPlay === 0 ? Scenes["PLAYING"]({
+            setVisibilityOfObject({
+                arrays : ["scenePaused"],
+                game : game,
+                status : "INVISIBLE"
+            });
+            game.contPlay === 0 && game.personagens.length === 0 ?//when the array is null create bootstrap of innitial scene
+            Scenes["PLAYING"]({
                 game : game,
                 win : false
-            }) : game.contPlay++;
+            }) : 
+            setVisibilityOfObject({
+                arrays : ["personagens", "itemsInitSceneComposition"],
+                game : game,
+                status : "VISIBLE"
+            });
+            game.contPlay++;
             repeatOfLogicInGame(game);
             break;
         case game.OVER :
-            
+            setVisibilityOfObject({
+                arrays : ["personagens", "itemsInitSceneComposition", "scenePause"],
+                game : game,
+                status : "INVISIBLE"
+            });
+            removeInvisibleObjects({
+                arrays : ["personagens", "itemsInitSceneComposition", "scenePause"],
+                game : game
+            });
             if(game.playerState === "WIN"){
                 resetCounts("contWin");
-                game.contWin === 0 ? Scenes["OVER"]({
+                game.contWin === 0 ?
+                Scenes["OVER"]({
                     game : game,
                     win : true
-                }) : game.contWin++;
+                }) :
+                game.contWin++;
             }
             else{
                 if(game.playerState === "LOSE"){
                     resetCounts("contLose");
-                    game.contLose === 0 ? Scenes["OVER"]({
+                    game.contLose === 0 ?
+                    Scenes["OVER"]({
                         game : game,
                         win : false
-                    }) : game.contLose++;
+                    }) :
+                    game.contLose++;
                 }
             }
             break;
         case game.PAUSE :
             resetCounts("contPause");
-            setInvisibleObjects({
+            setVisibilityOfObject({
                 arrays : ["personagens", "itemsInitSceneComposition", "sceneWaitingStart"],
-                game : game
+                game : game,
+                status : "INVISIBLE"
             });
             removeInvisibleObjects({
                 arrays : ["sceneWaitingStart"],
                 game : game
             });
-            game.contPause === 0 ? Scenes["PAUSE"]({
+            game.contPause === 0 && game.scenePaused.length === 0 ?
+            Scenes["PAUSE"]({
                 game : game,
                 win : false
-            }) : game.contPause++;
+            }) :
+            setVisibilityOfObject({
+                arrays : ["scenePaused"],
+                game : game,
+                status : "VISIBLE"
+            })
+            
+            game.contPause++;
             break;
     }
 }

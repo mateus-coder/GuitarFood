@@ -20,6 +20,9 @@ function Game () {
     this.lightningInGame = new Array;
     this.itemsInitSceneComposition = new Array;
     this.sceneWaitingStart = new Array;
+    this.scenePaused = new Array;
+    this.sceneGlorious = new Array;
+    this.sceneCry = new Arrray;
 }
 
 Game.prototype.removeObjects = function (props) {
